@@ -1001,6 +1001,8 @@ let check_stub_type ~(language : string option) (typ : Typedtree.typ)
        | Tarrow { is_async; _ } when (not allow_func) || is_async ->
            Some (Errors.invalid_stub_type loc)
        | Tarrow { params_ty; ret_ty; err_ty; is_async = _ } ->
+           if !Basic_config.target = Wasm_gc then None
+           else
            let is_simple_stub (ty : Stype.t) =
              match Stype.type_repr ty with
              | T_builtin T_unit
